@@ -26,7 +26,7 @@ for item in data:
     mrt=item["MRT"]
     lat=item["latitude"]
     lng=item["longitude"]
-    img=item["file"] #抓取file第一個網址，若第一個網址是非jpg檔案，就往後抓
+    img=item["file"]
     img=img.split("https")
     images=[]
     for i in img:
