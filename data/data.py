@@ -5,7 +5,7 @@ import os
 mydb=mysql.connector.connect(
     host="localhost",
     user="root",
-    password="0202",#passwordforec
+    password="password",#passwordforec
     #auth-plugin='mysql_native_password',
     db="taipeitrip",
     charset="utf8"
