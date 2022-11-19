@@ -2,19 +2,20 @@ import mysql.connector
 import json
 import os
 
-file=os.path.abspath('D:\taipei-day-trip\data\taipei-attractions.json')
-json_data=open(file).read()
-json_obj=json.loads(json_data)
-data=json_obj["result"]["results"]
-
 mydb=mysql.connector.connect(
-    host="127.0.0.1",
+    host="localhost",
     user="root",
-    password="passwordforec",
+    password="0202",#passwordforec
     #auth-plugin='mysql_native_password',
     db="taipeitrip",
-    charset="utf8",
+    charset="utf8"
 )
+
+file=open("D:\\taipei-day-trip\\data\\taipei-attractions.json", 'r', encoding='utf-8').read()
+json_obj=json.loads(file)
+data=json_obj["result"]["results"]
+
+
 cur=mydb.cursor()
 for item in data:
     id=item["_id"]
@@ -31,14 +32,13 @@ for item in data:
     images=[]
     for i in img:
         if i.endswith(".jpg") or i.endswith(".JPG"):
-            img.append("https"+i)
+            images.append("https"+i)
     images=str(images)
-    sql="INSERT INTO data (id, name, category, description, address, transport, mrt, lat, lng, images) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    sql="INSERT INTO attractions (id, name, category, description, address, transport, mrt, lat, lng, images) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     val=(id, name, category, description, address, transport, mrt, lat, lng, images)
     cur.execute(sql, val)
     mydb.commit()
-    
-file.close()
+
     
     
     
