@@ -3,21 +3,19 @@ app=Flask(__name__)
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 from flask import Flask, request, abort, jsonify
-
 import mysql.connector
 from mysql.connector.pooling import MySQLConnectionPool
 
-mydb_pool=MySQLConnectionPool(
-	pool_name="",
+mydb_pool=mysql.connector.pooling.MySQLConnectionPool(
+	pool_name="mypool",
 	pool_size=3,
     host="localhost",
     user="root",
     password="password",
-    #auth-plugin='mysql_native_password',
+	auth_plugin='mysql_native_password',
     db="taipeitrip",
-    charset="utf8"
+    charset="utf8",
 )
-
 
 # Pages
 @app.route("/")
@@ -47,7 +45,7 @@ def attractions():
 		db=mydb_pool.get_connection() 
 		cur=db.cursor(dictionary=True)
 
-		keyword=request.args.get("keyword")
+		keyword=request.args.get("keyword", None)
 		sql_key="SELECT id, name, category, description, address, transport, mrt, latitude, longitude, images FROM attractions WHERE name LIKE '%%%s%%' LIMIT %s, 12; " % (keyword, page_num,)
 		sql="SELECT id, name, category, description, address, transport, mrt, latitude, longitude, images FROM attractions LIMIT %s, 12; " % (page_num,)
 		sql_next="SELECT name FROM attractions LIMIT %s, 12; " % (next_pagenum,)
@@ -109,13 +107,12 @@ def attractions():
 			z=["nextPage", "data"]
 			k=[None,result]
 			result_next_null=dict(zip(z,k))
-
 			return result_next_null
 		return listplus
 	except:
 		return abort(500)
 	finally:
-		mydb_pool.close()
+		db.close()
 
 
 #2nd API 根據景點編號取得景點資料
@@ -142,18 +139,17 @@ def attraction_id(attractionId):
 		z=["data"]
 		k=result
 		listplus=dict(zip(z,k))
-		
 		return listplus
 	except:
 		return abort(500)
 
 @app.errorhandler(400)
 def request_failed(e):
-	return jsonify({"error":True, "message":"景點編號不正確"}),400
+	return jsonify({"error":True, "message":"景點編號不正確"}), 400
 
 @app.errorhandler(500)
 def request_failed(e):
-	return jsonify({"error":True,"message":"伺服器內部錯誤"}),500
+	return jsonify({"error":True,"message":"伺服器內部錯誤"}), 500
 
 
 #3rd API 取得景點分類名稱列表
@@ -176,4 +172,4 @@ def category():
 
 	
 
-app.run(port=3000)
+app.run(host="0.0.0.0", port=3000)

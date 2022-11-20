@@ -1,12 +1,12 @@
 import mysql.connector
 import json
-import os
+
 
 mydb=mysql.connector.connect(
     host="localhost",
     user="root",
-    password="password",#passwordforec
-    #auth-plugin='mysql_native_password',
+    password="password", #passwordforec
+    auth_plugin='mysql_native_password',
     db="taipeitrip",
     charset="utf8"
 )
@@ -15,8 +15,8 @@ file=open("D:\\taipei-day-trip\\data\\taipei-attractions.json", 'r', encoding='u
 json_obj=json.loads(file)
 data=json_obj["result"]["results"]
 
-
 cur=mydb.cursor()
+
 for item in data:
     id=item["_id"]
     name=item["name"]
@@ -34,10 +34,13 @@ for item in data:
         if i.endswith(".jpg") or i.endswith(".JPG"):
             images.append("https"+i)
     images=str(images)
-    sql="INSERT INTO attractions (id, name, category, description, address, transport, mrt, lat, lng, images) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    val=(id, name, category, description, address, transport, mrt, lat, lng, images)
-    cur.execute(sql, val)
-    mydb.commit()
+    try:
+        sql="INSERT INTO attractions (id, name, category, description, address, transport, mrt, lat, lng, images) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val=(id, name, category, description, address, transport, mrt, lat, lng, images)
+        cur.execute(sql, val)
+        mydb.commit()
+    except:
+        pass
 
     
     
