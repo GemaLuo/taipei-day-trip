@@ -114,11 +114,11 @@ def attractions():
 
 
 #2nd API 根據景點編號取得景點資料
-@app.route("/api/attraction/<attractionId>")
-def attraction_id(attractionId):
+@app.route("/api/attraction/<id>")
+def attraction_id(id):
 	try:
 		db=mydb_pool.get_connection()
-		cur=db.cursor(dictionary=True)
+		cur=db.cursor(dictionary=True,buffered=True)
 		id_sql="SELECT * FROM attractions WHERE id=%s ;" % (id,)
 		cur.execute(id_sql)
 		result=cur.fetchall()
@@ -137,6 +137,7 @@ def attraction_id(attractionId):
 		z=["data"]
 		k=result
 		listplus=dict(zip(z,k))
+		
 		return listplus
 	except:
 		return abort(500)
