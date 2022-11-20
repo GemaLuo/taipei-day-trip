@@ -119,7 +119,7 @@ def attraction_id(attractionId):
 	try:
 		db=mydb_pool.get_connection()
 		cur=db.cursor(dictionary=True)
-		id_sql="SELECT id, name, category, description, address, transport, mrt, latitude, longitude, images FROM attractions WHERE id=%s ;" % (id,)
+		id_sql="SELECT * FROM attractions WHERE id=%s ;" % (id,)
 		cur.execute(id_sql)
 		result=cur.fetchall()
 		db.close()
