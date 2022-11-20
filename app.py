@@ -36,18 +36,16 @@ def thankyou():
 @app.route("/api/attractions")
 def attractions():
 	#讀取頁數
-	page=request.args.get("page", 0) 
-	page=int(page)
+	page=int(request.args.get("page", 0))
 	page_num=page*12
 	next_pagenum=(page+1)*12
 	#關鍵字搜尋
 	try:
 		db=mydb_pool.get_connection() 
-		cur=db.cursor(dictionary=True)
-
+		cur=db.cursor(dictionary=True,buffered=True)
 		keyword=request.args.get("keyword", None)
-		sql_key="SELECT id, name, category, description, address, transport, mrt, latitude, longitude, images FROM attractions WHERE name LIKE '%%%s%%' LIMIT %s, 12; " % (keyword, page_num,)
-		sql="SELECT id, name, category, description, address, transport, mrt, latitude, longitude, images FROM attractions LIMIT %s, 12; " % (page_num,)
+		sql_key="SELECT * FROM attractions WHERE name LIKE '%%%s%%' LIMIT %s, 12; " % (keyword, page_num,)
+		sql="SELECT * FROM attractions LIMIT %s, 12; " % (page_num,)
 		sql_next="SELECT name FROM attractions LIMIT %s, 12; " % (next_pagenum,)
 		sql_next_key="SELECT name FROM attractions WHERE name LIKE '%%%s%%' LIMIT %s, 12; " % (keyword, next_pagenum,)
 
