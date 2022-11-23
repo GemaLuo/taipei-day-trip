@@ -38,10 +38,9 @@ def thankyou():
 #1st API 取得景點資料列表
 @app.route("/api/attractions")
 def attractions():
-	page = int(request.args.get("page"))
+	page=int(request.args.get("page"))
 	pages=page*12
-	keyword = request.args.get("keyword")
-
+	keyword=request.args.get("keyword")
 	db=mydb_pool.get_connection()
 	cur=db.cursor(buffered=True)
 
@@ -93,22 +92,83 @@ def attractions():
 				"mrt" : result[i][6],
 				"lat" : result[i][7],
 				"lng" : result[i][8],
-				#無法使用replace->eval(字串)可去掉字串的兩個引號
 				"images" : eval(result[i][9]) 
 			}
-			list.append(myresult)
+			mylist.append(myresult)
 			i=i+1
 		return jsonify({
 			"nextPage" : next, 
 			"data" : mylist
-			})
-	except:
+		})
+	except ValueError:
+		return jsonify({
+			"error": True,
+			"message": "Error!"
+		}), 400
+	except Exception:
 		return jsonify({
 			"error": True,
 			"message": "伺服器內部錯誤"
 		}), 500
 	finally:
 		db.close()
+	# page=int(request.args.get("page"))
+	# pages=page*12
+	# keyword=request.args.get("keyword")
+	# db=mydb_pool.get_connection()
+	# cur=db.cursor(buffered=True)
+	# if keyword:
+	# 	#
+	# 	sql="SELECT * FROM attractions WHERE category=%s OR LOCATE(%s, name)>0 LIMIT %s,%s"
+	# 	val=(keyword, keyword, pages, 12)
+	# 	cur.execute(sql, val)
+	# 	result=cur.fetchall()
+
+	# 	count="SELECT COUNT(*) FROM attractions WHERE category=%s OR LOCATE(%s, name)>0"
+	# 	val=(keyword, keyword)
+	# 	cur.execute(count, val)
+	# 	num=cur.fetchone()[0]
+		
+	# else:
+	# 	sql="SELECT * FROM attractions LIMIT %s,%s"
+	# 	val=(pages, 12)
+	# 	cur.execute(sql,val)
+	# 	result=cur.fetchall()
+
+	# 	count="SELECT count(*) FROM attractions"
+	# 	cur.execute(count)
+	# 	num=cur.fetchone()[0]
+		
+	# last=math.ceil(num/12)
+	# next=page+1
+	# if next>=last:
+	# 	next=None
+	# i=0 
+	# mylist=[]
+	# try:
+	# 	while i<len(result): 
+	# 		myresult = {				
+	# 			"id" : result[i][0],
+	# 			"name" : result[i][1],
+	# 			"category" : result[i][2],
+	# 			"description" : result[i][3],
+	# 			"address" : result[i][4],
+	# 			"transport" : result[i][5],
+	# 			"mrt" : result[i][6],
+	# 			"lat" : result[i][7],
+	# 			"lng" : result[i][8],
+	# 			"images" : eval(result[i][9])
+	# 		}
+			
+	# 		mylist.append(myresult)
+	# 		i = i + 1
+	# 	return jsonify({"nextPage" : next, 
+	# 				"data" : mylist})
+	# except:
+	# 	return jsonify({"error": True,
+	# 			"message": "Internal Server Error"}), 500
+	# finally:
+	# 	db.close()
 
 #2nd API 根據景點編號取得景點資料
 @app.route("/api/attraction/<id>")
