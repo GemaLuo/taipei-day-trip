@@ -2,7 +2,7 @@
 let isLoading=false;
 
 //categories選項
-fetch("http://0.0.0.0:3000/api/categories").then(function(res){
+fetch("http://44.229.57.144:3000/api/categories").then(function(res){
     return res.json();
 }).then(function(data){
     let categories=data.data
@@ -50,7 +50,7 @@ function search(){
     main_content.innerHTML="";
     let data=[]
     page=0 
-    fetch("http://0.0.0.0:3000/api/attractions?page="+page+"&keyword="+inputBar).then(function(response){
+    fetch("http://44.229.57.144:3000/api/attractions?page="+page+"&keyword="+inputBar).then(function(response){
         return response.json();
     }).then(function(allData){
         data=allData.data
@@ -71,7 +71,7 @@ const loadingObserver=document.querySelector(".footer");
 //主內容
 const getData=function(){
     let inputBar=document.querySelector("#inputBar").value;
-    fetch("http://0.0.0.0:3000/api/attractions?page="+page+"&keyword"+inputBar).then(function(response){
+    fetch("http://44.229.57.144:3000/api/attractions?page="+page+"&keyword"+inputBar).then(function(response){
         return response.json();
     }).then(function(allData){
         let data=allData.data
