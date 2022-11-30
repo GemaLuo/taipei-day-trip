@@ -23,6 +23,7 @@ fetch("http://44.229.57.144:3000/api/categories").then(function(res){
 function touchCat(e){
     let input=document.querySelector("input");
     input.value=e.target.textContent
+    input.style.color="black"
 }
 let input=document.querySelector("input");
 input.addEventListener("click", touchInput)
