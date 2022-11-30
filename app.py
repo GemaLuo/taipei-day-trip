@@ -1,5 +1,5 @@
 from flask import *
-app=Flask(__name__)
+app=Flask(__name__, static_folder="static", static_url_path="/")
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 app.config["JSON_SORT_KEYS"]=False #固定
@@ -112,63 +112,6 @@ def attractions():
 		}), 500
 	finally:
 		db.close()
-	# page=int(request.args.get("page"))
-	# pages=page*12
-	# keyword=request.args.get("keyword")
-	# db=mydb_pool.get_connection()
-	# cur=db.cursor(buffered=True)
-	# if keyword:
-	# 	#
-	# 	sql="SELECT * FROM attractions WHERE category=%s OR LOCATE(%s, name)>0 LIMIT %s,%s"
-	# 	val=(keyword, keyword, pages, 12)
-	# 	cur.execute(sql, val)
-	# 	result=cur.fetchall()
-
-	# 	count="SELECT COUNT(*) FROM attractions WHERE category=%s OR LOCATE(%s, name)>0"
-	# 	val=(keyword, keyword)
-	# 	cur.execute(count, val)
-	# 	num=cur.fetchone()[0]
-		
-	# else:
-	# 	sql="SELECT * FROM attractions LIMIT %s,%s"
-	# 	val=(pages, 12)
-	# 	cur.execute(sql,val)
-	# 	result=cur.fetchall()
-
-	# 	count="SELECT count(*) FROM attractions"
-	# 	cur.execute(count)
-	# 	num=cur.fetchone()[0]
-		
-	# last=math.ceil(num/12)
-	# next=page+1
-	# if next>=last:
-	# 	next=None
-	# i=0 
-	# mylist=[]
-	# try:
-	# 	while i<len(result): 
-	# 		myresult = {				
-	# 			"id" : result[i][0],
-	# 			"name" : result[i][1],
-	# 			"category" : result[i][2],
-	# 			"description" : result[i][3],
-	# 			"address" : result[i][4],
-	# 			"transport" : result[i][5],
-	# 			"mrt" : result[i][6],
-	# 			"lat" : result[i][7],
-	# 			"lng" : result[i][8],
-	# 			"images" : eval(result[i][9])
-	# 		}
-			
-	# 		mylist.append(myresult)
-	# 		i = i + 1
-	# 	return jsonify({"nextPage" : next, 
-	# 				"data" : mylist})
-	# except:
-	# 	return jsonify({"error": True,
-	# 			"message": "Internal Server Error"}), 500
-	# finally:
-	# 	db.close()
 
 #2nd API 根據景點編號取得景點資料
 @app.route("/api/attraction/<id>")
