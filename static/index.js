@@ -2,7 +2,7 @@
 let isLoading=false;
 
 //categories選項
-fetch("http://44.229.57.144:3000/api/categories").then(function(res){
+fetch("http://127.0.0.1:3000/api/categories").then(function(res){
     return res.json();
 }).then(function(data){
     let categories=data.data
@@ -42,7 +42,7 @@ function touchBlank(e){
 }
 //搜尋keyword
 let page=0 //因無限載入後page不為0
-function search(){
+search= function(){
     let main_content=document.querySelector(".main-content");
     //停止對loadingObserver的監聽
     observer.unobserve(loadingObserver)
@@ -51,18 +51,18 @@ function search(){
     main_content.innerHTML="";
     let data=[]
     page=0 
-    fetch("http://44.229.57.144:3000/api/attractions?page="+page+"&keyword="+inputBar).then(function(response){
+    fetch("http://127.0.0.1:3000/api/attractions?page="+page+"&keyword="+inputBar).then(function(response){
         return response.json();
     }).then(function(allData){
-        data=allData.data
-        if (data && data.length){
+        data=allData.data;
+        if(data && data.length){
             page=0
             observer.observe(loadingObserver);
         }else{
             let nothing=document.createElement("div");
             nothing.textContent="查無此結果，請輸入分類名稱。"
             nothing.className="nothing"
-            main_content.appendChild(nothing)
+            main_content.appendChild(nothing);
         }
     })    
 }
@@ -72,12 +72,12 @@ const loadingObserver=document.querySelector(".footer");
 //主內容
 const getData=function(){
     let inputBar=document.querySelector("#inputBar").value;
-    fetch("http://44.229.57.144:3000/api/attractions?page="+page+"&keyword"+inputBar).then(function(response){
+    fetch("http://127.0.0.1:3000/api/attractions?page="+page+"&keyword="+inputBar).then(function(response){
         return response.json();
     }).then(function(allData){
-        let data=allData.data
-        page=allData.nextPage
-        let main_content=document.querySelector(".main-content")
+        let data=allData.data;
+        page=allData.nextPage;
+        let main_content=document.querySelector(".main-content");
         for (let i=0; i<data.length; i++){
             item=data[i].images
             let main_item=document.createElement("div");
