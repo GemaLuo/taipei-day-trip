@@ -374,8 +374,12 @@ hr{
         flex-wrap: nowrap;
         width: 50%;
     }
-    .main-name, .category, .booking, .date-container, .time-container, .price-container{
-        width: 98%;
+    .main-name, .category, .date-container, .time-container, .price-container{
+        width: 90%;
+    }
+    .booking{
+        width: 95%;
+        padding-right: 10px;
     }
     .booking-button{
         margin-top: 0px;
@@ -451,46 +455,120 @@ img{
     opacity: 0.6;
 }
 
-@media(max-width: 850px){
-    .main{
-        flex-direction: column;
-    }
-    .main-info{
-        width: 100%;
-    }
-    .main-name{
-        height: 33px;
-        width: 340px;
-        margin-left: 10px;
-        margin-top: 20px;
-    }
-    .category{
-        width: 340px;
-        margin-left: 10px;
-    }
-    .booking{
-        width: 88%;
+@media(max-width: 900px){
+    .nav{
         margin-left: 10px;
         margin-right: 10px;
-        padding-right: 10px;
-    }
-    .booking-title, .date-container, .time-container, .price-container{
-        width: 90%;
-    }
-    .booking-button{
-        margin-top: 0px;
     }
     .main-img{
-        width: 100%;
-        margin-left: auto;
+        display: flex;
+        margin-top: 55px;
+        margin-left: 15px;
         margin-right: auto;
-        margin-bottom: 0px;
+        width: 49%;
     }
-    .hr{
-        width: 99%;
+    .images{
+        width: 100%;
+    }
+    img{
+        width: 100%;
+    }
+    .main-info{
+        margin-right: 10px;
+        margin-left: 10px;
+        flex-wrap: nowrap;
+        width: 49%;
+    }
+    .main-name, .category, .date-container, .price-container{
+        width: 100%;
+    }
+    .booking{
+        width: 90%;
+        padding-right: 10px;
+    }
+    .booking-txt{
+        padding-bottom: 10px;
+    }
+    .date-txt{
+        width: 85px;
+        margin-right: 0px;
+    }
+    .date{
+        margin-left: 0px;
+        width: 49%;
+    } 
+    .txt{
+        width: 85px;
+        margin-right: 2px;
+    }
+    .time-container{
+        width: 100%;
+        margin-top: 10px;
+    }
+    .time{
+        width: 200px;
+    }
+    .space{
+        margin-left: -10px;
     }
     .description-container{
         width: 95%;
-        margin-left: 15px;
+        margin-left: auto;
+        margin-right: auto;
     }
+    hr{
+        width: 98%;
+    }
+}
+@media(max-width:600px) {
+    .main{
+        display: flex;
+        flex-direction: column;
+    }
+    .main-img{
+        margin-left: auto;
+        margin-top: 46px;
+        width: 100%;
+    }
+    .images{
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+    }
+    img{
+        position: absolute;
+        max-width: 100%;
+        width: 100%;
+        object-fit:cover;
+        object-position: center;
+    }
+    .main-info{
+        width: 98%;
+        margin: 0px auto;
+    }
+    .main-name, .category{
+        width: 98%;
+        margin-left: 10px;
+    }
+    .booking{
+        width: 90%;
+        padding-left: 15px;
+        padding-right: 5px;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+    .date-container{
+        width: 100%;
+        margin-bottom: 10px;
+    } 
+    .time-container, .price-container{
+        width: 99%;
+    }
+
+    .description-container{
+        width: 98%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
 }
