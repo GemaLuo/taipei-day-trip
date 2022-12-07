@@ -431,6 +431,9 @@ img{
     right: 10px;
     top: 50%;
 }
+.right:hover, .left:hover{
+    opacity: 1;
+}
 .dots{
     border-radius: 50%;
     width: 12px;
@@ -445,6 +448,7 @@ img{
     left: 50%;
     transform: translateX(-50%);
     z-index: 1;
+    opacity: 0.6;
 }
 
 @media(max-width: 850px){
@@ -465,7 +469,7 @@ img{
         margin-left: 10px;
     }
     .booking{
-        width: 87%;
+        width: 88%;
         margin-left: 10px;
         margin-right: 10px;
         padding-right: 10px;
