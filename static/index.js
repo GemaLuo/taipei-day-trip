@@ -4,6 +4,7 @@ const category_list=document.querySelector(".category-list");
 const input=document.querySelector("input");
 const body=document.querySelector("body");
 const main_content=document.querySelector(".main-content");
+
 //categories選項
 fetch("http://44.229.57.144:3000/api/categories").then(function(res){
     return res.json();
