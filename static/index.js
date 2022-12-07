@@ -1,12 +1,14 @@
 //設定全域變數isLoading追蹤、記錄頁面是否正載入API
 let isLoading=false;
-
+const category_list=document.querySelector(".category-list");
+const input=document.querySelector("input");
+const body=document.querySelector("body");
+const main_content=document.querySelector(".main-content");
 //categories選項
 fetch("http://44.229.57.144:3000/api/categories").then(function(res){
     return res.json();
 }).then(function(data){
-    let categories=data.data
-    let category_list=document.querySelector(".category-list")
+    const categories=data.data
     category_list.addEventListener("click", touchCat)
     for(let i=0; i<categories.length; i++){
         ///api/categories有replace()移除空白
@@ -21,11 +23,10 @@ fetch("http://44.229.57.144:3000/api/categories").then(function(res){
 });
 //點searchBar
 function touchCat(e){
-    let input=document.querySelector("input");
     input.value=e.target.textContent
     input.style.color="black"
 }
-let input=document.querySelector("input");
+
 input.addEventListener("click", touchInput)
 function touchInput(e){
     //阻止事件冒泡
@@ -33,17 +34,17 @@ function touchInput(e){
     let category_list=document.querySelector(".category-list")
     category_list.style.display="grid"
 }
+
 //點searchBar以外body區域以隱藏分類清單
-let body=document.querySelector("body")
 body.addEventListener("click", touchBlank)
 function touchBlank(e){
     let category_list=document.querySelector(".category-list")
     category_list.style.display="none"
 }
+
 //搜尋keyword
 let page=0 //因無限載入後page不為0
-search= function(){
-    let main_content=document.querySelector(".main-content");
+search=function(){
     //停止對loadingObserver的監聽
     observer.unobserve(loadingObserver)
     let inputBar=document.querySelector("#inputBar").value;
@@ -76,17 +77,16 @@ const getData=function(){
         return response.json();
     }).then(function(allData){
         let data=allData.data;
-        page=allData.nextPage;
-        let main_content=document.querySelector(".main-content");
         for (let i=0; i<data.length; i++){
             item=data[i].images
-            let main_item=document.createElement("div");
+            let main_item=document.createElement("a");
             let img_name=document.createElement("div");
             let img_nametxt=document.createElement("div");
             main_item.className="main-item";
-            main_item.id="pic"+((page-1)*12+i);
+            main_item.href="/attraction/"+parseInt(data[i].id)
+            main_item.id="pic"+((page)*12+i);
             main_content.appendChild(main_item);
-            let main_item_id=document.querySelector("#pic"+((page-1)*12+i));
+            let main_item_id=document.querySelector("#pic"+((page)*12+i));
             let img=document.createElement('img');
             img.src=item[0];
             main_item_id.appendChild(img);
@@ -95,13 +95,13 @@ const getData=function(){
             img_nametxt.className="img-nametxt";
             main_item_id.appendChild(img_name)
             img_name.appendChild(img_nametxt)
-
+            //資訊欄
             let main_info=document.createElement("div");
             main_info.className="main-info";
-            main_info.id="main-info"+((page-1)*12+i);
+            main_info.id="main-info"+((page)*12+i);
             main_item_id.appendChild(main_info);
 
-            let main_info_txt=document.querySelector("#main-info"+((page-1)*12+i));
+            let main_info_txt=document.querySelector("#main-info"+((page)*12+i));
             let txt1=document.createElement("div");
             let txt2=document.createElement("div");
             txt1.className="main-infotxt";
@@ -112,6 +112,7 @@ const getData=function(){
             main_info_txt.appendChild(txt2);
         }
         isLoading=false;
+        page=allData.nextPage;
     })
 };
 //scroll event
@@ -130,7 +131,7 @@ const callback=([entry])=>{
     }
 }
 //建立觀察器，設定偵測捲動目標是否進入可見範圍的容器(觀察器)
-var observer=new IntersectionObserver(callback, option)
+let observer=new IntersectionObserver(callback, option)
 //告訴observer要觀察哪個目標元素
 observer.observe(loadingObserver);
 
