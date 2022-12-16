@@ -1,12 +1,12 @@
 //設定全域變數isLoading追蹤、記錄頁面是否正載入API
 let isLoading=false;
 const category_list=document.querySelector(".category-list");
-const input=document.querySelector("input");
+const input=document.querySelector(".search>input");
 const body=document.querySelector("body");
 const main_content=document.querySelector(".main-content");
 
 //categories選項
-fetch("http://44.229.57.144:3000/api/categories").then(function(res){
+fetch("http://127.0.0.1:3000/api/categories").then(function(res){
     return res.json();
 }).then(function(data){
     const categories=data.data
@@ -24,23 +24,23 @@ fetch("http://44.229.57.144:3000/api/categories").then(function(res){
 });
 //點searchBar
 function touchCat(e){
-    input.value=e.target.textContent
-    input.style.color="black"
+    input.value=e.target.textContent;
+    input.style.color="black";
 }
-
+ 
 input.addEventListener("click", touchInput)
 function touchInput(e){
     //阻止事件冒泡
     e.stopPropagation()
-    let category_list=document.querySelector(".category-list")
-    category_list.style.display="grid"
+    let category_list=document.querySelector(".category-list");
+    category_list.style.display="grid";
 }
 
 //點searchBar以外body區域以隱藏分類清單
 body.addEventListener("click", touchBlank)
 function touchBlank(e){
-    let category_list=document.querySelector(".category-list")
-    category_list.style.display="none"
+    let category_list=document.querySelector(".category-list");
+    category_list.style.display="none";
 }
 
 //搜尋keyword
@@ -53,7 +53,7 @@ search=function(){
     main_content.innerHTML="";
     let data=[]
     page=0 
-    fetch("http://44.229.57.144:3000/api/attractions?page="+page+"&keyword="+inputBar).then(function(response){
+    fetch("http://127.0.0.1:3000/api/attractions?page="+page+"&keyword="+inputBar).then(function(response){
         return response.json();
     }).then(function(allData){
         data=allData.data;
@@ -74,7 +74,7 @@ const loadingObserver=document.querySelector(".footer");
 //主內容
 const getData=function(){
     let inputBar=document.querySelector("#inputBar").value;
-    fetch("http://44.229.57.144:3000/api/attractions?page="+page+"&keyword="+inputBar).then(function(response){
+    fetch("http://127.0.0.1:3000/api/attractions?page="+page+"&keyword="+inputBar).then(function(response){
         return response.json();
     }).then(function(allData){
         let data=allData.data;
@@ -136,3 +136,135 @@ let observer=new IntersectionObserver(callback, option)
 //告訴observer要觀察哪個目標元素
 observer.observe(loadingObserver);
 
+//註冊、登入
+//nav登入登出按鍵
+const sign=document.querySelector("#sign");
+const signOut=document.querySelector("#signOut");
+signOut.style.display="none";
+
+//verify user status
+fetch("/api/user/auth",{
+    method: "GET",
+    credentials: "include",
+    headers:{
+        "Content-Type": "application/json"
+    }
+}).then(function(res){
+    return res.json()
+}).then(function(status){
+    if (status.data){
+        sign.style.display="none";
+        signOut.style.display="block";
+    }
+})
+//click logout button
+signOut.addEventListener("click", function(e){
+    fetch("/api/user/auth", {
+        "method": "DELETE"
+    }).then(function(res){
+        return res.json();
+    }).then(function(data){
+        location.reload();//reloads the current URL
+    })
+})
+//click sign up(button)
+const btnSignUp=document.querySelector("#btnSignUp");
+const signUpResMsg=document.querySelector("#signUp>.resMessage");
+btnSignUp.addEventListener("click", function(e){
+    let data={};
+    signUpResMsg.style.display="none";
+    signUpInput=document.querySelectorAll("#signUp>input");
+    const regex=/^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$/
+    const InputEmail=signUpInput[1].value;
+    for (let i=0; i<signUpInput.length; i++){
+        let inputBarData=signUpInput[i].value;
+        if (!inputBarData){
+            data=null;
+            break;
+        }
+        data[signUpInput[i].id]=signUpInput[i].value;
+    }
+    //verify input information
+    if (!data || !regex.test(InputEmail)){
+        signUpResMsg.textContent="輸入資料有誤，請重新輸入";
+        signUpResMsg.style.display="block";
+        return
+    }
+    //send data to backend
+    fetch("/api/user", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).then(function(res){
+        return res.json();
+    }).then(function(data){
+        if(data.error){
+            signUpResMsg.style.display="block";
+            signUpResMsg.textContent=data.message;
+            return
+        }
+        signUpResMsg.style.display="block";
+        signUpResMsg.style.color="black";
+        signUpResMsg.textContent="已註冊成功，請重新登入";
+    })
+})
+//CLICK LOGIN BUTTON
+const btnSignIn=document.querySelector("#btnSignIn");
+const signInResMsg=document.querySelector("#signIn>.resMessage");
+btnSignIn.addEventListener("click", function(){
+    signInResMsg.style.display="none";
+    const signInInput=document.querySelectorAll("#signIn>input");
+    let data={
+        email: signInInput[0].value,
+        password: signInInput[1].value
+    }
+    fetch("/api/user/auth", {
+        method: "PUT",
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).then(function(res){
+        return res.json()
+    }).then(function(status){
+        if (status.error){
+            signInResMsg.style.display="block";
+            signInResMsg.textContent="帳號或密碼錯誤";
+            return
+        }
+        location.reload()
+    })
+})
+
+const dialogMask=document.querySelector(".dialog-mask");
+const signIn=document.querySelector("#signIn");
+const signUp=document.querySelector("#signUp");
+const tapToSignUp=document.querySelector("#tapToSignUp");
+tapToSignUp.addEventListener("click", function(){
+    signIn.style.display="none";
+    signUp.style.display="flex";
+    signUpResMsg.style.display="none";
+})
+
+const tapToSignIn=document.querySelector("#tapToSignIn");
+tapToSignIn.addEventListener("click", function(){
+    signIn.style.display="flex";
+    signUp.style.display="none";
+    signInResMsg.style.display="none";
+})
+
+const login=document.querySelectorAll(".login");
+login.forEach(closeLogin=>{
+    closeLogin.addEventListener("click", function(e){
+        if (e.target.className=="close"){
+            this.style.display="none";
+            dialogMask.style.display="none";
+        }
+    })
+})
+sign.addEventListener("click",function(){
+    signIn.style.display="flex";
+    dialogMask.style.display="block";
+})

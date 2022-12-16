@@ -6,8 +6,11 @@ app.config["JSON_SORT_KEYS"]=False #固定
 
 from flask import Flask, jsonify
 import mysql.connector, math
+import jwt
+import time
+from flask_cors import CORS 
 from mysql.connector.pooling import MySQLConnectionPool
-
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 mydb_pool=mysql.connector.pooling.MySQLConnectionPool(
 		pool_name="mypool",
 		pool_size=3,
@@ -168,6 +171,88 @@ def category():
 	finally:
 		db.close()
 
+@app.route("/api/user", methods=["POST"]) #註冊新的會員
+def signup():
+	json_data=request.json
+	email=json_data["email"]
+	db=mydb_pool.get_connection()
+	cur=db.cursor(dictionary=True, buffered=True)
+	myresult={}
+	try:
+		cur.execute("SELECT email FROM member WHERE email=%s;", [email])
+		find_email=cur.fetchone()
+		if find_email is not None:
+			return {
+				"error": True,
+				"message": "此email已被註冊過"
+			}
+		name=json_data["name"]
+		password=json_data["password"]
+		insert_member_data=(name, email, password)
+		sql="INSERT INTO member(name, email, password) VALUES(%s, %s, %s);"
+		cur.execute(sql, insert_member_data)
+		db.commit()
+		myresult["ok"]=True
+	except Exception as e:
+		myresult["error"]=True
+		myresult["message"]=e.__class__.__name__+str(e)
+	finally:
+		cur.close()
+		db.close()
+	return myresult
+
+@app.route("/api/user/auth", methods=["GET", "PUT", "DELETE"])
+def auth():
+	if request.method=="GET": #取得當前登入的會員資訊
+		myresult={}
+		cookies=request.cookies
+		try:
+			if cookies:
+				token=cookies["token"]
+				jwt_key="TaipeiDayTrip"
+				data=jwt.decode(token, jwt_key, algorithms='HS256')
+				myresult["data"]=data
+				return myresult
+			return {"data": None}
+		except Exception as e:
+			return {"data": None}
 	
+	if request.method=="PUT": #登入會員帳戶
+		myresult={}
+		data=request.json
+		member_data=(data["email"], data["password"])
+		db=mydb_pool.get_connection()
+		cur=db.cursor(dictionary=True, buffered=True)
+		sql="SELECT member_id, name, email FROM member WHERE email=%s AND password=%s;"
+		try:
+			cur.execute(sql, member_data)
+			search_data=cur.fetchone()
+			if search_data==None:
+				myresult["error"]=True
+				return myresult
+			payloads={
+				"id":search_data["member_id"],
+				"name":search_data["name"],
+				"email":search_data["email"]
+			}
+			jwt_key="TaipeiDayTrip"
+			token=jwt.encode(payloads, jwt_key, algorithm='HS256')
+			myresult["ok"]=True
+			myresult=make_response(myresult)
+			myresult.set_cookie(key="token", value=token, expires=time.time()+60*60*24*7)
+		except Exception as e:
+			myresult["error"]=True
+			myresult["message"]=e.__class__.__name__+str(e)
+		finally:
+			cur.close()
+			db.close()
+		return myresult
+	if request.method=="DELETE":
+		myresult={}
+		myresult["ok"]=True
+		response=make_response(myresult)
+		response.set_cookie(key="token", value="", expires=0)
+		return response
+
 if __name__ == "__main__":
 	app.run(host="0.0.0.0", port=3000)
