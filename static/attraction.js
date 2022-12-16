@@ -46,6 +46,7 @@ function getData(Res){
         let imgLink=imgData[i];
         let listContainer=document.getElementById("images");
         let imgContainer=document.createElement("li");
+
         let image=document.createElement("img");
         image.src=imgLink;
         let dots=document.createElement("p");
@@ -54,6 +55,7 @@ function getData(Res){
         let j=i+1;
         let target='slider('+j+')';
         dots.setAttribute("onclick", target);
+
 
         imgContainer.appendChild(image);
         listContainer.appendChild(imgContainer);

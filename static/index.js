@@ -27,7 +27,6 @@ function touchCat(e){
     input.value=e.target.textContent;
     input.style.color="black";
 }
- 
 input.addEventListener("click", touchInput)
 function touchInput(e){
     //阻止事件冒泡
