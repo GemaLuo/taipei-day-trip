@@ -12,10 +12,13 @@
                 <a class="nav-header" href="/" style="text-decoration: none;">台北一日遊</a>
                 <div class="nav-menu">
                     <button>預定行程</button>
-                    <button>登入/註冊</button>
+
+                    <button id="sign">登入/註冊</button>
+                    <button id="signOut">登出系統</button>
                 </div>
             </div>
         </div>
+        
         <div class="main">
             <div class="main-img" id="main-img">
                 <div id="loading"></div>
@@ -62,8 +65,36 @@
             <div class="subtitle">交通方式：</div>
             <div class="description" id="transportation"></div>
         </div>
-
         <div class="footer"><div>COPYRIGHT @ 2022 台北一日遊</div></div>
+        <div class="dialog-mask"></div>
+        <div class="login" id="signIn">
+            <div class="green-bar"></div>
+            <div class="sign-title">登入會員帳號</div>
+            <div class="close"></div>
+            <input placeholder="輸入電子信箱" type="email" />
+            <input placeholder="輸入密碼" type="password"/>
+            <button id="btnSignIn">登入帳戶</button>
+            <div class="resMessage"></div>
+            <div class="remindmsg">
+                還沒有帳戶？
+                <span id="tapToSignUp">點此註冊</span>
+            </div>
+        </div>
+
+        <div class="login" id="signUp">
+            <div class="green-bar"></div>
+            <div class="sign-title">註冊會員帳號</div>
+            <div class="close"></div>
+            <input placeholder="輸入姓名" type="text" id="name"/>
+            <input placeholder="輸入電子郵件" type="email" id="email"/>
+            <input placeholder="輸入密碼" type="password" id="password"/>
+            <button id="btnSignUp">註冊新帳戶</button>
+            <div class="resMessage"></div>
+            <div class="remindmsg">
+                已經有帳戶了？
+                <span id="tapToSignIn">點此登入</span>
+            </div>
+        </div>
         <script type="text/javascript" src={{ url_for('static', filename='attraction.js')}}></script>
     </body>
 </html>

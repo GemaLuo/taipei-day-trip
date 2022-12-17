@@ -15,12 +15,11 @@ body{
     align-items: center;
     background-color: #FFFFFF;
     position: fixed;
-    z-index: 20;
+    z-index: 10;
     margin-left: auto;
     margin-right: auto;
     top: 0;
-    margin-bottom: 37px;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid #E8E8E8;
 }
 .nav{
     display: flex;
@@ -55,7 +54,109 @@ body{
     transform: translateY(-2px);
     box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
 }
-
+/*sign*/
+.dialog-mask{
+    position: fixed;
+    display: none;
+    background-color: #000000;
+    opacity: 0.25;
+    z-index: 11;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width:100%;
+}
+.login{
+    position: fixed;
+    background-color: #FFFFFF;
+    box-shadow: 0px 4px 60px #AAAAAA;
+    border-radius: 6px;
+    width: 340px;
+    top: 15%;
+    left: 50%;
+    z-index: 12;
+    display: none;
+    flex-direction:column;
+    box-sizing: border-box;
+    transform: translate(-50%,0);
+    padding: 15px;
+}
+.green-bar{
+    height: 10px;
+    width: 100%;
+    background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
+    top: 0;
+    left: 0;
+    position: absolute;
+    border-radius: 6px 6px 0 0;
+}
+.sign-title{
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 24px;
+    text-align: center;
+    color: #666666;
+    margin: 15px;
+}
+.close{
+    position: absolute;
+    right: 17px;
+    top: 27px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    object-fit: cover;
+    display: flex;
+    background-image: url('icon_close.png');
+    background-color: #FFFFFF;
+    color: black;
+}
+.login>input{
+    width: 310px;
+    height: 47px;
+    padding: 15px;
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    align-items: center;
+    color: #757575;
+}
+.login>button{
+    width: 310px;
+    height: 47px;
+    background-color: #448899;
+    border-radius: 5px;
+    font-size: 19px;
+    font-weight: 400;
+    text-align: center;
+    align-items: center;
+    color: #FFFFFF;
+    border: 0;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.resMessage{
+    color: rgb(255, 0, 0);
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.remindmsg{
+    font-size: 16px;
+    font-weight: 500;
+    align-items: center;
+    text-align: center;
+    color: #666666;
+}
+.remindmsg>span{ 
+    cursor: pointer;
+}
 /*main=left pic+ right txt*/
 .main{
     display: flex;
@@ -97,7 +198,8 @@ body{
     height: 406px;
     border-radius: 3px;
 }
-img{
+
+.main-img>img{
     object-fit: cover;
 }
 /*right*/
