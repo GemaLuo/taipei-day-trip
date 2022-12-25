@@ -171,6 +171,7 @@ def category():
 	finally:
 		db.close()
 
+
 #註冊新的會員
 @app.route("/api/user", methods=["POST"]) 
 def signup():
@@ -254,6 +255,7 @@ def auth():
 		response=make_response(myresult)
 		response.set_cookie(key="token", value="", expires=0)
 		return response
+
 
 #預定行程
 @app.route("/api/booking", methods=["GET"])
