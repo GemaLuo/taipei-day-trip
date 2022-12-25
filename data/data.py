@@ -10,11 +10,11 @@ mydb=mysql.connector.connect(
     db="taipeitrip",
     charset="utf8",
     pool_name="mypool",
-    pool_size=3, 
+    pool_size=5, 
 )
 connectionPool=mysql.connector.pooling.MySQLConnectionPool(
     pool_name="mypool",
-    pool_size=3,
+    pool_size=5,
     pool_reset_session=True,
     auth_plugin='mysql_native_password',
     host="localhost",

@@ -11,7 +11,7 @@
             <div class="nav">
                 <a class="nav-header" href="/" style="text-decoration:none;">台北一日遊</a>
                 <div class="nav-menu">
-                    <button>預定行程</button>
+                    <button id="nav-booking">預定行程</button>
                     <button id="sign">登入/註冊</button>
                     <button id="signOut">登出系統</button>
                 </div>
@@ -23,7 +23,7 @@
             <div class="sign-title">登入會員帳號</div>
             <img class="close" src="{{ url_for('static', filename='icon_close.png') }}" />
             <input placeholder="輸入電子信箱" type="email" />
-            <input placeholder="輸入密碼" type="password"/>
+            <input placeholder="輸入密碼" type="password" autocomplete="on"/>
             <button id="btnSignIn">登入帳戶</button>
             <div class="resMessage"></div>
             <div class="remindmsg">
@@ -38,7 +38,7 @@
             <img class="close" src="{{ url_for('static', filename='icon_close.png') }}" />
             <input placeholder="輸入姓名" type="text" id="name"/>
             <input placeholder="輸入電子郵件" type="email" id="email"/>
-            <input placeholder="輸入密碼" type="password" id="password"/>
+            <input placeholder="輸入密碼" type="password" id="password" autocomplete="on"/>
             <button id="btnSignUp">註冊新帳戶</button>
             <div class="resMessage"></div>
             <div class="remindmsg">
@@ -65,6 +65,7 @@
         
         <div class="footer"><div>COPYRIGHT @ 2022 台北一日遊</div></div>
         <script type="text/javascript" src={{ url_for('static', filename='index.js')}}></script>
+        <script type="text/javascript" src={{ url_for('static', filename='login.js')}}></script>
     </body>
 </html>
 
