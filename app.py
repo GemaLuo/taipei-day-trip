@@ -13,7 +13,7 @@ from mysql.connector.pooling import MySQLConnectionPool
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 mydb_pool=mysql.connector.pooling.MySQLConnectionPool(
 		pool_name="mypool",
-		pool_size=3,
+		pool_size=5,
     	host="localhost",
     	user="root",
     	password="password",
@@ -171,7 +171,9 @@ def category():
 	finally:
 		db.close()
 
-@app.route("/api/user", methods=["POST"]) #註冊新的會員
+
+#註冊新的會員
+@app.route("/api/user", methods=["POST"]) 
 def signup():
 	json_data=request.json
 	email=json_data["email"]
@@ -253,6 +255,156 @@ def auth():
 		response=make_response(myresult)
 		response.set_cookie(key="token", value="", expires=0)
 		return response
+
+
+#預定行程
+@app.route("/api/booking", methods=["GET"])
+def check_booking():
+	try:
+	#取得尚未確認下單的預定行程
+		token=request.cookies.get("token")
+		if token==None:
+			return jsonify({
+				"error": True,
+				"message": "尚未登入系統"
+			}), 403
+		jwt_key="TaipeiDayTrip"
+		payloads=jwt.decode(token, jwt_key, algorithms='HS256')
+		member_id=payloads["id"]
+
+		db=mydb_pool.get_connection()
+		cur=db.cursor(dictionary=True, buffered=True)
+		sql="SELECT * FROM booking WHERE member_id=%s;"
+		cur.execute(sql, (member_id,))
+		booking_data=cur.fetchone()
+		cur.close()
+		if booking_data==None:
+			return jsonify({
+				"data": None
+		}),200	
+		attraction_id=booking_data["attractionId"]
+		date=booking_data["date"]
+		time=booking_data["time"]
+		price=booking_data["price"]
+	except Exception as e:
+		return jsonify({
+			"error": True,
+			"message": "SYSTEM ERROR"
+		})
+	finally:
+		cur.close()
+		db.close()
+		
+	try:
+		db=mydb_pool.get_connection()
+		cur=db.cursor(dictionary=True, buffered=True)
+		sql="SELECT name, address, images FROM attractions WHERE attractions.id=%s;"
+		cur.execute(sql, (attraction_id,))
+		attraction_data=cur.fetchone()
+		cur.close()
+		image_data=attraction_data["images"].replace("[","").replace("]","").replace("'","").split(",")
+		image=json.loads(json.dumps(image_data))
+		res={
+			"data":{
+				"attraction":{
+					"id": attraction_id,
+					"name": attraction_data["name"],
+					"address": attraction_data["address"],
+					"image": image[0]
+				},
+				"date": date,
+				"time": time,
+				"price": price
+			}
+		}
+		return jsonify(res), 200
+	except Exception as e:
+		return jsonify({
+			"error":True,
+			"message": e.__class__.__name__+str(e)
+		})
+	finally:
+		db.close()
+
+@app.route("/api/booking", methods=["POST"])
+def new_booking():
+	#建立新的預定行程
+	token=request.cookies.get("token")
+	if token==None:
+		return jsonify({
+			"error": True,
+			"message": "尚未登入系統"
+		}), 403
+	jwt_key="TaipeiDayTrip"
+	payloads=jwt.decode(token, jwt_key, algorithms='HS256')
+	member_id=payloads["id"]
+
+	data=request.get_json()
+	attractionId=data["attractionId"]
+	date=data["date"]
+	time=data["time"]
+	price=data["price"]
+	if date=="":
+		return jsonify({
+			"error": True,
+			"message": "select date is needed."
+		}), 400
+	try: 
+		db=mydb_pool.get_connection()
+		cur=db.cursor(dictionary=True, buffered=True)
+		sql="SELECT * FROM booking WHERE member_id=%s;"
+		cur.execute(sql, (member_id,))
+		get_data=cur.fetchone()
+		if get_data==None:
+			sql_data="INSERT INTO booking (member_id, attractionId, date, time, price) VALUES(%s, %s, %s, %s, %s);"
+			val=(member_id, attractionId, date, time, price)
+		else:
+			sql_data="UPDATE booking SET member_id=%s, attractionId=%s, date=%s, time=%s, price=%s WHERE member_id=%s;"
+			val=(member_id, attractionId, date, time, price, member_id)
+		cur.execute(sql_data, val)
+		db.commit()
+		cur.close()
+		return jsonify({
+			"ok": True
+		})
+	except Exception as e:
+		print(e)
+		return jsonify({
+			"error": True,
+			"message": e.__class__.__name__+str(e)
+		})
+	finally:
+		db.close()
+@app.route("/api/booking", methods=["DELETE"])
+def delete_booking():
+	#刪除目前的預定行程
+		token=request.cookies.get("token")
+		if token==None:
+			return jsonify({
+				"error": True,
+				"message": "尚未登入系統"
+			}), 403
+		jwt_key="TaipeiDayTrip"
+		payloads=jwt.decode(token, jwt_key, algorithms='HS256')
+		member_id=payloads["id"]
+		try:
+			db=mydb_pool.get_connection()
+			cur=db.cursor(dictionary=True, buffered=True)
+			sql="DELETE FROM booking WHERE member_id= %s;"
+			cur.execute(sql, (member_id,))
+			db.commit()
+			cur.close()
+			return jsonify({
+				"ok": True
+			})
+		except Exception as e:
+			print(e)
+			return jsonify({
+				"error": True,
+				"message": e.__class__.__name__+str(e)
+			})
+		finally:
+			db.close()
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0", port=3000)

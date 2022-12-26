@@ -11,8 +11,7 @@
             <div class="nav">
                 <a class="nav-header" href="/" style="text-decoration: none;">台北一日遊</a>
                 <div class="nav-menu">
-                    <button>預定行程</button>
-
+                    <button id="nav-booking">預定行程</button>
                     <button id="sign">登入/註冊</button>
                     <button id="signOut">登出系統</button>
                 </div>
@@ -33,7 +32,7 @@
                 <div class="booking">
                     <div class="booking-title">訂購導覽行程</div>
                     <div class="booking-txt">以此景點為中心的一日行程，帶您探索城市角落故事</div>
-                    <form id="booking">
+                    <form>
                         <div class="date-container">
                             <div class="date-txt">選擇日期：</div><input class="date" id="date" type="date" name="date" required>
                         </div>
@@ -41,10 +40,10 @@
                             <div class="txt">選擇時間：</div>
                             <div class="time" onclick="changePrice()">
                                 <div>
-                                    <input id="morning" name="button" value="2000" type="radio" checked></input><label class="space" for="morning">上半天</label>
+                                    <input id="morning" name="time" value="2000" type="radio" checked></input><label class="space" for="morning">上半天</label>
                                 </div>
                                 <div>
-                                    <input id="evening" name="button" value="2500" type="radio"></input><label class="space" for="evening">下半天</label>
+                                    <input id="evening" name="time" value="2500" type="radio"></input><label class="space" for="evening">下半天</label>
                                 </div>
                             </div>
                         </div> 
@@ -52,7 +51,7 @@
                             <div class="txt">導覽費用：</div>
                             <div class="pirce-ntd" id="price_ntd">新台幣 2000 元</div>
                         </div>
-                        <input class="booking-button" type="submit" value="開始預約行程" />
+                        <button id="booking-button" class="booking-button">開始預約行程</button>
                     </form>
                 </div>
             </div>
@@ -72,7 +71,7 @@
             <div class="sign-title">登入會員帳號</div>
             <div class="close"></div>
             <input placeholder="輸入電子信箱" type="email" />
-            <input placeholder="輸入密碼" type="password"/>
+            <input placeholder="輸入密碼" type="password" autocomplete="on"/>
             <button id="btnSignIn">登入帳戶</button>
             <div class="resMessage"></div>
             <div class="remindmsg">
@@ -87,7 +86,7 @@
             <div class="close"></div>
             <input placeholder="輸入姓名" type="text" id="name"/>
             <input placeholder="輸入電子郵件" type="email" id="email"/>
-            <input placeholder="輸入密碼" type="password" id="password"/>
+            <input placeholder="輸入密碼" type="password" id="password" autocomplete="on"/>
             <button id="btnSignUp">註冊新帳戶</button>
             <div class="resMessage"></div>
             <div class="remindmsg">
@@ -96,6 +95,7 @@
             </div>
         </div>
         <script type="text/javascript" src={{ url_for('static', filename='attraction.js')}}></script>
+        <script type="text/javascript" src={{ url_for('static', filename='login.js')}}></script>
     </body>
 </html>
 
