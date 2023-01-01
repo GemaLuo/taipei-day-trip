@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>台北一日遊-訂購頁面</title>
+        <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='thankyou.css')}} />
+    </head>
+    <body>
+        <div class="navigation">
+            <div class="nav">
+                <a class="nav-header" href="/" style="text-decoration:none;">台北一日遊</a>
+                <div class="nav-menu">
+                    <button>預定行程</button>
+                    <button id="signOut">登出系統</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main">
+            <div class="main-content">
+                <div><i class="fa-solid fa-cart-circle-check"></i></div>
+                <div class="main-success">行程預定成功</div>
+                <div class="order-number">您的訂單編號如下<span></span></div>
+                <div>請記住此編號，或前往會員中心查詢此訂單</div>
+            </div>
+        </div>
+
+        <div class="footer-nobooking"><div>COPYRIGHT @ 2022 台北一日遊</div></div>
+        <script type="text/javascript" src="{{ url_for('static', filename='thankyou.js')}}"></script>
+    </body>
+</html>
+

@@ -1,0 +1,97 @@
+@import url(https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap);
+
+body{
+    margin: 0;
+    font-family: "Noto Sans TC";
+    font-style: normal;
+}
+
+/*navigation*/
+.navigation{ /*container*/
+    display: flex;
+    height: 54px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFFF;
+    position: fixed;
+    z-index: 10;
+    margin-left: auto;
+    margin-right: auto;
+    top: 0;
+    border-bottom: 1px solid #E8E8E8;
+}
+.nav{
+    display: flex;
+    width: 1200px;
+    height: 34px;
+}
+.nav-header{
+    height: 34px;
+    font-weight: 700;
+    font-size: 30px;
+    text-align: left;
+    line-height: 34px;
+    color: #448899;
+}
+.nav-menu{
+    display: flex;
+    flex: auto;
+    justify-content: flex-end;
+    align-items: center;
+}
+.nav-menu>button{
+    padding: 10px;
+    border: 0; /*去邊*/
+    background-color: #FFFFFF;
+    color: #666666;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+}
+.nav-menu>button:hover{
+    cursor: pointer;
+    transform: translateY(-2px);
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+}
+.main{
+    display: flex;
+    position: relative;
+    top: 64px;
+    height: 200px;
+    justify-content: center;
+}
+.main-content{
+    color: #666666;
+    text-align: center;
+}
+.main-success{
+    font-size: 26px;
+    font-weight: 700;
+    padding: 10px;
+}
+.order-number{
+    font-size: 22px;
+    font-weight: 550px;
+    padding-bottom: 10px;
+}
+
+
+/*footer*/
+.footer-nobooking{
+    display: flex;
+    height: 865px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: #757575;
+    margin-top: 150px;
+}
+.footer-nobooking>div{
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFFFFF;
+    margin-bottom: 750px;
+}

@@ -17,8 +17,6 @@ fetch("/api/user/auth",{
     if(status.data){
         sign.style.display="none";
         signOut.style.display="block";
-    }else{
-
     }
 })
 
