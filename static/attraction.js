@@ -152,3 +152,4 @@ startBooking.addEventListener("click", function(e){
         dialogMask.style.display="block";
         
     }
+})
