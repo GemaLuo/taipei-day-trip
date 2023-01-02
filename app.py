@@ -411,6 +411,11 @@ def delete_booking():
 @app.route("/api/orders", methods=["POST"])
 def order():
 	token=request.cookies.get("token")
+	if token==None:
+		return jsonify({
+			"error": True,
+			"message": "尚未登入系統"
+		}), 403
 	jwt_key="TaipeiDayTrip"
 	payloads=jwt.decode(token, jwt_key, algorithms='HS256')
 	member_id=payloads["id"]
@@ -435,8 +440,8 @@ def order():
 	attraction=trip["attraction"]
 	attractionId=attraction["id"]
 	attractionName=attraction["name"]
-	attractionAddress=attraction["address"]
-	attractionImage=attraction["image"]
+	# attractionAddress=attraction["address"]
+	# attractionImage=attraction["image"]
 
 	try:
 		db=mydb_pool.get_connection()
@@ -444,8 +449,8 @@ def order():
 
 		order_code=str(time.strftime('%Y%m%D%H%M%S', time.localtime(time.time())).replace('/', '')+str(time.time()).replace(',', '')[-7:])
 
-		sql="INSERT INTO ordering(member_id, order_code, attractionId, attractionName, address, images, date, time, price, phone, order_status) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-		val=(member_id, order_code, attractionId, attractionName, attractionAddress, attractionImage, date, time, price, phone, 1)
+		sql="INSERT INTO ordering(member_id, order_code, attractionId, attractionName, date, time, price, phone, order_status) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+		val=(member_id, order_code, attractionId, attractionName, date, time, price, phone, 1)
 		cur.execute(sql, val)
 		db.commit()
 
@@ -520,33 +525,52 @@ def order():
 def get_order_info(orderNumber):
 	order_number=str(orderNumber)
 	token=request.cookies.get("token")
+	if token==None:
+		return jsonify({
+			"error": True,
+			"message": "尚未登入系統"
+		}), 403
 	jwt_key="TaipeiDayTrip"
 	payloads=jwt.decode(token, jwt_key, algorithms='HS256')
 	try:
 		db=mydb_pool.get_connection()
 		cur=db.cursor(dictionary=True)
-		sql="SELECT * FROM ordering WHERE order_code=%s;"
-		cur.execute(sql,(order_number,))
+		sql="SELECT\
+			ordering.price,\
+			attractions.id,\
+			attractions.name,\
+			attractions.address,\
+			attractions.images,\
+			order.date,\
+			order.time,\
+			order.phone,\
+			order.order_status\
+			FROM ordering INNER JOIN attractions ON order.attractionId=attractions.id\
+			WHERE ordering.order_code=%s;"
+		val=(order_number,)
+		cur.execute(sql,val)
 		query=cur.fetchone()
+		image_data=query["images"].replace("[","").replace("]","").replace("'","").split(",")
+		image=json.loads(json.dumps(image_data))
 		if query:
 			res_data={
 				"data": {
 					"number": order_number,
-					"price": query["price"],
+					"price": query[0],
 					"trip":{
 						"attraction":{
-							"id":query["attractionId"],
-							"name": query["attractionName"],
-							"address": query["address"],
-							"image": query["images"]
+							"id": query[1],
+							"name": query[2],
+							"address": query[3],
+							"image": image[0]
 						},
-					"date": query["date"],
-					"time": query["time"]
+					"date": query[5],
+					"time": query[6]
 					},
 					"contact":{
 						"name": payloads["name"],
 						"email": payloads["email"],
-						"phone": query["phone"]
+						"phone": query[7]
 					},
 					"status": 1
 				}

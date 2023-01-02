@@ -122,7 +122,6 @@ function onSubmit(event){
             body: JSON.stringify(data)
         }).then((res)=>res.json())
         .then((data)=>{
-            console.log(data);
             let payData=data.data;
             let orderNum=payData.number;
             console.log(orderNum)
