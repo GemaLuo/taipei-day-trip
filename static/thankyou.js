@@ -17,8 +17,8 @@ fetch("/api/user/auth",{
 function showOrderNumber(){
     const orderNumber=(location.search).replace("?number=", "")
     document.querySelector(".order-number>span").textContent=orderNumber
-    return loaded()
 }
+showOrderNumber()
 //click logout button
 signOut.addEventListener("click", function(e){
     fetch("/api/user/auth", {
