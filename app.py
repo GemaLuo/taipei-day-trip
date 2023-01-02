@@ -541,11 +541,11 @@ def get_order_info(orderNumber):
 			attractions.name,\
 			attractions.address,\
 			attractions.images,\
-			order.date,\
-			order.time,\
-			order.phone,\
-			order.order_status\
-			FROM ordering INNER JOIN attractions ON order.attractionId=attractions.id\
+			ordering.date,\
+			ordering.time,\
+			ordering.phone,\
+			ordering.order_status\
+			FROM ordering INNER JOIN attractions ON ordering.attractionId=attractions.id\
 			WHERE ordering.order_code=%s;"
 		val=(order_number,)
 		cur.execute(sql,val)
