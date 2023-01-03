@@ -87,3 +87,7 @@ signOut.addEventListener("click", function(e){
         location.reload();
     })
 })
+const navBooking=document.querySelector('#nav-booking');
+navBooking.addEventListener("click", function(){
+    location.reload()
+})

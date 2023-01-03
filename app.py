@@ -275,7 +275,7 @@ def check_booking():
 		member_id=payloads["id"]
 
 		db=mydb_pool.get_connection()
-		cur=db.cursor()
+		cur=db.cursor(dictionary=True, buffered=True)
 		sql="SELECT * FROM booking WHERE member_id=%s;"
 		cur.execute(sql, (member_id,))
 		booking_data=cur.fetchone()
@@ -288,17 +288,18 @@ def check_booking():
 		date=booking_data["date"]
 		time=booking_data["time"]
 		price=booking_data["price"]
-	except Exception as e:
-		return jsonify({
-			"error": True,
-			"message": "SYSTEM ERROR"
-		})
+	# except Exception as e:
+	# 	return jsonify({
+	# 		"error": True,
+	# 		"message": "SYSTEM ERROR"
+	# 	})
 	finally:
+		cur.close()
 		db.close()
 		
 	try:
 		db=mydb_pool.get_connection()
-		cur=db.cursor()
+		cur=db.cursor(dictionary=True, buffered=True)
 		sql="SELECT name, address, images FROM attractions WHERE attractions.id=%s;"
 		cur.execute(sql, (attraction_id,))
 		attraction_data=cur.fetchone()
