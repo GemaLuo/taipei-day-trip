@@ -288,16 +288,16 @@ def check_booking():
 		date=booking_data["date"]
 		time=booking_data["time"]
 		price=booking_data["price"]
-	# except Exception as e:
-	# 	return jsonify({
-	# 		"error": True,
-	# 		"message": "SYSTEM ERROR"
-	# 	})
-	# finally:
-	# 	db.close()
+	except Exception as e:
+		return jsonify({
+			"error": True,
+			"message": "SYSTEM ERROR"
+		})
+	finally:
+		db.close()
 		
-	# try:
-		# db=mydb_pool.get_connection()
+	try:
+		db=mydb_pool.get_connection()
 		cur=db.cursor()
 		sql="SELECT name, address, images FROM attractions WHERE attractions.id=%s;"
 		cur.execute(sql, (attraction_id,))
