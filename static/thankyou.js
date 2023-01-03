@@ -29,3 +29,7 @@ signOut.addEventListener("click", function(e){
         location.reload();
     })
 })
+const book=document.querySelector('#nav-booking');
+book.addEventListener("click", function(e){
+    alert("請至首頁訂購行程！")
+})
