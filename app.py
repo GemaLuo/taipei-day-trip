@@ -8,6 +8,8 @@ from flask import Flask, jsonify
 import mysql.connector, math
 import jwt
 import time
+import datetime
+import requests
 from flask_cors import CORS 
 from mysql.connector.pooling import MySQLConnectionPool
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -286,11 +288,11 @@ def check_booking():
 		date=booking_data["date"]
 		time=booking_data["time"]
 		price=booking_data["price"]
-	except Exception as e:
-		return jsonify({
-			"error": True,
-			"message": "SYSTEM ERROR"
-		})
+	# except Exception as e:
+	# 	return jsonify({
+	# 		"error": True,
+	# 		"message": "SYSTEM ERROR"
+	# 	})
 	finally:
 		cur.close()
 		db.close()
@@ -375,6 +377,7 @@ def new_booking():
 		})
 	finally:
 		db.close()
+
 @app.route("/api/booking", methods=["DELETE"])
 def delete_booking():
 	#刪除目前的預定行程
@@ -405,6 +408,193 @@ def delete_booking():
 			})
 		finally:
 			db.close()
+
+@app.route("/api/orders", methods=["POST"])
+def order():
+	token=request.cookies.get("token")
+	if token==None:
+		return jsonify({
+			"error": True,
+			"message": "尚未登入系統"
+		}), 403
+	jwt_key="TaipeiDayTrip"
+	payloads=jwt.decode(token, jwt_key, algorithms='HS256')
+	member_id=payloads["id"]
+
+	try:
+		db=mydb_pool.get_connection()
+		cur=db.cursor(dictionary=True, buffered=True)
+		data=request.get_json()
+		prime=data["prime"]
+		order=data["order"]
+		price=order["price"]
+
+		contact=order["contact"]
+		phone=contact["phone"]
+		name=contact["name"]
+		email=contact["email"]
+
+		trip=order["trip"]
+		date=trip["date"]
+		time=trip["time"]
+
+		attraction=trip["attraction"]
+		attractionId=attraction["id"]
+		# attractionName=attraction["name"]
+	# attractionAddress=attraction["address"]
+	# attractionImage=attraction["image"]
+		# db=mydb_pool.get_connection()
+		# cur=db.cursor(dictionary=True)
+		date=datetime.datetime.now().date()
+		order_code=date.strftime("%Y%m%D").replace('/' ,'')
+		
+
+		sql="INSERT INTO ordering(member_id, order_code, attractionId, date, time, price, phone, order_status) VALUES(%s, %s, %s, %s, %s, %s, %s, %s);"
+		val=(member_id, order_code, attractionId, date, time, price, phone, 1)
+		cur.execute(sql, val)
+		db.commit()
+
+	# except Exception as e:
+	# 	return jsonify({
+	# 		"error": True,
+	# 		"message": "System error"
+	# 	})
+	# finally:
+	# 	cur.close()
+	# 	db.close()
+
+	#串接金流
+		url="https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
+		headers={
+			"Content-Type": "application/json", 
+			"x-api-key": "partner_ztNcH9QhTQqGQcAjYIUAQL3gKKdsmD9LIFeNF5Ew5BfOeIBhld5FoM4x"
+			}
+		tappayData={
+			"prime": prime,
+			"partner_key": "partner_ztNcH9QhTQqGQcAjYIUAQL3gKKdsmD9LIFeNF5Ew5BfOeIBhld5FoM4x",
+			"merchant_id": "moongun_CTBC",
+			"details": "TapPay Test",
+			"amount": price,
+			"cardholder": {
+				"phone_number": phone,
+				"name": name,
+				"email": email
+			},
+			"remember": True
+		}
+		send_to_server=requests.post(url, headers=headers, data=json.dumps(tappayData))
+		payment=send_to_server.json()
+
+		if payment["status"]==0:
+			res_data={
+				"data":{
+					"number": order_code,
+					"payment": {
+						"status": payment["status"],
+						"message": "付款成功"
+					}
+				}
+			}
+		# try:
+		# 	db=mydb_pool.get_connection()
+		# 	cur=db.cursor()
+			sql="UPDATE ordering SET order_status=0 WHERE order_code=%s;"
+			cur.execute(sql,(order_code,))
+			db.commit()
+			sql="DELETE FROM booking WHERE member_id=%s;"
+			cur.execute(sql,(member_id,))
+			db.commit()
+			return jsonify(res_data),200
+		else: 
+			res_data={
+				"data":{
+					"number": order_code,
+					"payment":{
+						"status": payment["status"],
+						"message": "付款失敗"
+					}
+				}
+			}
+		return (jsonify(data={
+			"number": order_code,
+			"payment": res_data
+		}),200)
+	# except Exception as e:
+	# 	return jsonify({
+	# 		"error": True,
+	# 	 	"message": "System Error"
+	# 	})
+		
+	finally:
+		cur.close()
+		db.close()
+
+@app.route("/api/order/<orderNumber>", methods=["GET"])
+def get_order_info(orderNumber):
+	token=request.cookies.get("token")
+	if token==None:
+		return jsonify({
+			"error": True,
+			"message": "尚未登入系統"
+		}), 403
+	jwt_key="TaipeiDayTrip"
+	payloads=jwt.decode(token, jwt_key, algorithms='HS256')
+	try:
+		db=mydb_pool.get_connection()
+		cur=db.cursor(dictionary=True)
+		sql="SELECT\
+			ordering.order_code,\
+			ordering.price,\
+			attractions.id,\
+			attractions.name,\
+			attractions.address,\
+			attractions.images,\
+			ordering.date,\
+			ordering.time,\
+			ordering.phone,\
+			ordering.order_status\
+			FROM ordering INNER JOIN attractions ON ordering.attractionId=attractions.id\
+			WHERE ordering.order_code=%s;"
+		val=((int(orderNumber)),)
+		cur.execute(sql,val)
+		query=cur.fetchone()
+		image_data=query["images"].replace("[","").replace("]","").replace("'","").split(",")
+		image=json.loads(json.dumps(image_data))
+		if query:
+			res_data={
+				"data": {
+					"number": query[0],
+					"price": query[1],
+					"trip":{
+						"attraction":{
+							"id": query[2],
+							"name": query[3],
+							"address": query[4],
+							"image": image[0]
+						},
+					"date": query[6],
+					"time": query[7]
+					},
+					"contact":{
+						"name": payloads["name"],
+						"email": payloads["email"],
+						"phone": query[8]
+					},
+					"status": 1
+				}
+			}
+			return jsonify(res_data)
+
+		return jsonify({"data": None})
+
+	# except Exception as e:
+	# 	return jsonify({
+	# 		"error": True,
+	# 		"message": "System Error"
+	# 	})
+	finally:
+		cur.close()
+		db.close()
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0", port=3000)

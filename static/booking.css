@@ -144,6 +144,8 @@ hr{
     color: #666666;
     margin-bottom: 15px;
 }
+
+.tpfield,
 input{
     box-sizing: border-box;
     width: 200px;
@@ -152,6 +154,25 @@ input{
     background-color: #FFFFFF;
     border-radius: 5px;
     padding: 10px;
+
+    font-size: 16px;
+    font-weight: 500;
+    color: #666666;
+}
+.credit-card{
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666666;
+}
+.credit-card>label{
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 5px;
+    color: #666666;
+
 }
 .notice-message{
     margin-top: 5px;
@@ -188,6 +209,14 @@ input{
     cursor: pointer;
     line-height: 16px;
 }
+
+.order-total>button:disabled{
+    background-color: #545f62;
+}
+.tappay-field-focus {
+    border:2px solid black;
+}
+
 /*footer*/
 .footer-nobooking{
     display: flex;

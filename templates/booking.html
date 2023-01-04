@@ -4,14 +4,14 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>台北一日遊-訂購頁面</title>
-        <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='booking.css')}} />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='booking.css')}}" />
     </head>
     <body>
         <div class="navigation">
             <div class="nav">
                 <a class="nav-header" href="/" style="text-decoration:none;">台北一日遊</a>
                 <div class="nav-menu">
-                    <button>預定行程</button>
+                    <button id="nav-booking">預定行程</button>
                     <button id="signOut">登出系統</button>
                 </div>
             </div>
@@ -52,28 +52,38 @@
                 <div class="user-info">您的聯絡資訊</div>
                 <label>聯絡姓名：<input class="input" type="text" id="name" required></label>
                 <label>聯絡信箱：<input class="input" id="email" type="email" required></label>
-                <label>手機號碼：<input class="input" type="text" maxlength="10" required></label>
+                <label>手機號碼：<input class="input" id="phoneNumber" type="text" maxlength="10"></label>
                 <div class="notice-message">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡資訊。</div>
                 <hr/>
             </div>
             
             <div class="booking-section">
                 <div class="user-info">信用卡付款資訊</div>
-                <label>卡片號碼：<input class="input" id="creditCardNum" placeholder="**** **** **** ****" type="tel" maxlength="19" inputmode="numeric" pattern="[0-9\s]{13,19}" onkeyup="cardNumFormat()"></label>
-                <label>過期時間：<input class="input" id="creditCardExp" placeholder="MM / YY" type="tel" maxlength="7" onkeyup="cardExpFormat()"></label>
-                <label>驗證密碼：<input class="input" placeholder="CVV" type="text" maxlength="3"></label>
+                <div class="credit-card">
+                    <label>卡片號碼：</label>
+                    <div class="tpfield" id="card-number"></div>
+                </div>
+                <div class="credit-card">
+                    <label>過期日期：</label>
+                    <div class="tpfield" id="card-expiration-date"></div>
+                </div>
+                <div class="credit-card">
+                    <label>驗證密碼：</label>
+                    <div class="tpfield" id="card-ccv"></div>
+                </div>
             <hr/>    
             </div> 
             
             <div class="order-total">
                 <div class="order-fee">總價：<span></span></div>
-                <button>確認訂購並付款</button>
+                <button disabled class="pay-button">確認訂購並付款</button>
             </div>
         </div>
 
         <div class="footer-nobooking"><div>COPYRIGHT @ 2022 台北一日遊</div></div>
         <div class="footer"><div>COPYRIGHT @ 2022 台北一日遊</div></div>
-
+        <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='booking.js')}}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='order.js')}}"></script>
     </body>
 </html>
