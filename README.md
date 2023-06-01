@@ -26,7 +26,7 @@ Password: test123
 ### Payment Information
 ```
 Card Number: 4242 4242 4242 4242
-Valid Date: 01 / 24
+Valid Date: 12 / 33
 CCV: 123
 ```
 <br>
@@ -73,7 +73,6 @@ Third party payment system with TapPay.
 <br>
 
 ### :shopping_cart: Payment Process & Order History
-![Payment Process](https://github.com/GemaLuo/taipei-day-trip/assets/112456014/459529ed-443a-42a9-82d3-4059aa8422e7)
 
 <br>
 
