@@ -1,22 +1,22 @@
 # [Taipei-Day-Trip](http://44.229.57.144:3000/):luggage:
 
+Taipei-day-trip is a travel e-commerce website that allows you to discover and book one-day sightseeing tours in Taipei City.
 
 ## Catalog
 - [DEMO](#DEMO)
   - [Test Account](#Test-Account)
   - [Payment Information](#Payment-Information)
 - [Stack](#Stack)
+- [API doc](#API-Doc)
 - [Data Schema](#Data-Schema)
 - [Features](#Features)
 - [Contact](#Contact)
 
-## Introduce
-Taipei-day-trip-website is an e-commerce website that allows you to find, compare, and book one-day sightseeing tours at attractions in Taipei city.
 
-This is my first project in the WeHelp bootcamp, built with vanilla javascript and flask, and designed according to this [figma prototype](https://www.figma.com/file/MZkYBH31H5gyLoZoZq116j) and [API documentation](https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0).
 
 ## DEMO
-![taipei-day-trip](https://user-images.githubusercontent.com/112456014/215304227-8d5951e0-b3e2-4f56-a5ba-8179b5e47b23.gif)
+
+![taipei-demo](https://github.com/GemaLuo/taipei-day-trip/assets/112456014/471e77a9-d276-45d6-9ef5-140df4dfe18a)
 
 ### Test Account
 ```
@@ -49,6 +49,9 @@ CCV: 123
 - Git/GitHub
 <br>
 
+## API Doc
+[API doc](https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0)
+
 ## Database Schema
 ![taipei一日遊data_schema-removebg-preview](https://github.com/GemaLuo/taipei-day-trip/assets/112456014/3a08f1e8-fd69-416c-b4ab-38a862a94698)
 <br>
@@ -69,14 +72,18 @@ Third party payment system with TapPay.
 <br>
 
 ### :framed_picture: Image Carousel
+[taipei-image.webm](https://github.com/GemaLuo/taipei-day-trip/assets/112456014/6f72fc11-6948-4a26-924b-f6e6f1eb93d1)
 
 <br>
 
 ### :shopping_cart: Payment Process & Order History
+[payment order.webm](https://github.com/GemaLuo/taipei-day-trip/assets/112456014/fdbeeecd-3277-4998-ba84-2c26603ac4c2)
 
 <br>
 
 ### :iphone: Responsive Web Design
+[taipei-rwd.webm](https://github.com/GemaLuo/taipei-day-trip/assets/112456014/c47d5209-e2dd-4978-b4c7-f1b03a9b1a07)
+
 <br>
 
 ## Contact
