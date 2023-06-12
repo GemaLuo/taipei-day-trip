@@ -8,7 +8,7 @@ Taipei-day-trip is a travel e-commerce website that allows you to discover and b
   - [Payment Information](#Payment-Information)
 - [Stack](#Stack)
 - [API doc](#API-Doc)
-- [Data Schema](#Data-Schema)
+- [Database Schema](#Database-Schema)
 - [Features](#Features)
 - [Contact](#Contact)
 
