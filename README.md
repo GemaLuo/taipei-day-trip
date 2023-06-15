@@ -1,4 +1,4 @@
-# [Taipei-Day-Trip](http://44.229.57.144:3000/):luggage:
+# Taipei-Day-Trip:luggage:
 
 Taipei-day-trip is a travel e-commerce website that allows you to discover and book one-day sightseeing tours in Taipei City.
 
